@@ -1,0 +1,334 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Tanishka & Mayank</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:#000;color:#fff}
+body{overflow-x:hidden}
+#intro{position:fixed;inset:0;z-index:1000;background:#000;display:flex;align-items:center;justify-content:center}
+#intro video{vertical-align:top;width:100%;height:100%;object-fit:contain;background:#000;display:block}
+#tap{position:absolute;bottom:8vh;left:50%;transform:translateX(-50%);
+ padding:15px 31px;border:1px solid rgba(255,255,255,.9);border-radius:999px;
+ background:rgba(0,0,0,.22);color:#fff;letter-spacing:2px;text-transform:uppercase;
+ font:600 12px Arial,sans-serif;cursor:pointer}
+#intro.out{animation:fadeOut .75s forwards}
+@keyframes fadeOut{to{opacity:0;visibility:hidden}}
+
+#slides{width:100%}
+.slide{
+ position:relative;width:100%;height:100svh;min-height:520px;
+ background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.slide video{vertical-align:top;
+ position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+ background:#000;z-index:2;
+}
+.slide .poster{
+ position:absolute;inset:0;width:100%;height:100%;object-fit:contain;
+ background:#000;z-index:1;transition:opacity .35s ease;
+}
+.slide.ready .poster{opacity:0}
+.slide .petals{position:absolute;inset:0;pointer-events:none;z-index:6;overflow:hidden}
+.petal{position:absolute;top:-25px;width:9px;height:6px;border-radius:75% 25% 75% 25%;
+ background:rgba(248,194,200,.55);animation:fall linear infinite}
+@keyframes fall{to{transform:translate3d(var(--drift),110vh,0) rotate(420deg)}}
+
+/* Dedicated scratch page before Welcome Lunch & Haldi */
+.scratch-page{
+ position:relative;width:100%;height:100svh;min-height:520px;
+ background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;
+}
+.scratch-page .scratch-video{
+ position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+ background:#000;z-index:1;display:block;
+}
+.scratch-page .scratch-wrap{
+ position:absolute;left:50%;top:48.1%;transform:translate(-50%,-50%);
+ width:60.5%;height:10.7%;border-radius:18px;overflow:hidden;
+ box-shadow:0 10px 26px rgba(104,72,27,.18);border:1px solid rgba(119,82,28,.30);z-index:10;
+}
+.scratch-page .reveal{
+ position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+ text-align:center;background:linear-gradient(135deg,#f6eddb,#efe1c6 48%,#e7d4b3);
+ color:#66745e;font-family:"Roxborough CF","RoxboroughCF","Cormorant Garamond",Georgia,serif;
+ font-size:clamp(17px,2.15vw,31px);font-weight:500;line-height:1.14;letter-spacing:.055em;
+ padding:8px 14px;z-index:1;
+}
+.scratch-page .scratch-paper{
+ position:absolute;inset:0;z-index:2;display:flex;align-items:center;justify-content:center;
+ border-radius:18px;
+ background:
+ radial-gradient(circle at 18% 25%,rgba(255,246,204,.22) 0 1px,transparent 2px),
+ radial-gradient(circle at 72% 62%,rgba(88,58,18,.12) 0 1px,transparent 2px),
+ linear-gradient(135deg,#c9a05a,#e5ca86 23%,#b98c3f 50%,#e0bf77 76%,#a97930);
+ background-size:11px 11px,15px 15px,100% 100%;
+ color:#5d461f;font:600 clamp(10px,1.15vw,17px) Georgia,serif;
+ letter-spacing:.14em;text-shadow:0 1px 0 rgba(255,245,210,.45);
+ box-shadow:inset 0 0 0 1px rgba(91,63,22,.22),inset 0 0 22px rgba(255,245,210,.14);
+ pointer-events:none;
+}
+.scratch-page #scratch{position:absolute;inset:0;width:100%;height:100%;touch-action:none;cursor:crosshair;z-index:3}
+@media(max-width:700px){
+ .scratch-page .scratch-wrap{width:60.5%;height:10.7%;top:48.1%}
+}
+
+/* Music button. The requested audio file is user-supplied only; see note in README. */
+#music{
+ position:fixed;right:18px;bottom:18px;z-index:900;width:48px;height:48px;
+ border-radius:50%;border:1px solid rgba(255,255,255,.7);background:rgba(60,45,30,.45);
+ color:#fff;font-size:19px;backdrop-filter:blur(6px);cursor:pointer;display:none;
+}
+#music.on{display:block}
+
+.map-page{
+ min-height:100svh;background:#fffaf5;display:flex;flex-direction:column;align-items:center;
+ justify-content:center;padding:50px 7%;text-align:center;position:relative;overflow:hidden;color:#806d5b
+}
+.map-page h1{margin:0 0 12px;font:500 clamp(40px,7vw,80px) Georgia,serif}
+.map-page p{margin:0 0 28px;font:500 14px Georgia,serif;letter-spacing:1.5px}
+.map{width:min(860px,94vw);aspect-ratio:1.8/1;border-radius:16px;overflow:hidden;
+ box-shadow:0 14px 40px rgba(70,50,35,.16);border:1px solid #dbcab9}
+.map iframe{width:100%;height:100%;border:0;display:block}
+.dir{margin-top:22px;padding:14px 24px;border-radius:999px;background:#a98762;color:#fff;
+ text-decoration:none;font:600 12px Arial,sans-serif;letter-spacing:1.4px}
+
+/* Gap-free scrolling fix: each invitation video occupies one exact viewport frame. */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #000;
+}
+.slide {
+  position: relative !important;
+  width: 100% !important;
+  height: 100svh !important;
+  min-height: 100svh !important;
+  max-height: 100svh !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  display: block !important;
+  line-height: 0 !important;
+  font-size: 0 !important;
+}
+.slide video,
+.slide img.poster {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 100% !important;
+  min-height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  display: block !important;
+  object-fit: cover !important;
+}
+.slide .petals {
+  position: absolute !important;
+  inset: 0 !important;
+}
+.scratch-page,
+.map-page {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+
+/* Android edge-line fix: overscan only slide 3 so no source-video edge is visible. */
+.slide[data-slide="3"] video,
+.slide[data-slide="3"] .poster {
+  transform: scale(1.02) !important;
+  transform-origin: center center !important;
+}
+
+
+/* First-page scroll prompt */
+.slide[data-slide="1"] .scroll-down{position:absolute;left:50%;bottom:3.2%;transform:translateX(-50%);z-index:7;color:#fff;font:700 clamp(14px,1.7vw,22px) Arial,sans-serif;letter-spacing:4px;text-transform:uppercase;text-shadow:0 2px 10px rgba(0,0,0,.75),0 0 16px rgba(255,255,255,.35);pointer-events:none;animation:scrollPulse 1.45s ease-in-out infinite;padding:10px 18px 12px;border:1px solid rgba(255,255,255,.7);border-radius:999px;background:rgba(0,0,0,.22);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px)}
+.slide[data-slide="1"] .scroll-down::before{content:'';position:absolute;inset:-4px;border:1px solid rgba(255,255,255,.28);border-radius:999px;animation:scrollRing 1.45s ease-in-out infinite}
+.slide[data-slide="1"] .scroll-down::after{content:'↓';display:block;text-align:center;margin-top:6px;font-size:28px;line-height:1;font-weight:700}
+@keyframes scrollPulse{0%,100%{opacity:.72;transform:translateX(-50%) translateY(0) scale(1)}50%{opacity:1;transform:translateX(-50%) translateY(5px) scale(1.035)}}
+@keyframes scrollRing{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:.75;transform:scale(1.06)}}
+
+</style>
+</head>
+<body>
+
+<div id="intro">
+  <video id="curtain" playsinline preload="auto" poster="Curtain-poster.jpg"><source src="Curtain.mp4" type="video/mp4"></video>
+  <button id="tap">Tap to Open</button>
+</div>
+
+<audio id="musicAudio" loop preload="none">
+  <source src="Pihu-Bole-Flute.mp3" type="audio/mpeg">
+</audio>
+<button id="music" aria-label="Play music">♪</button>
+
+<main id="slides"></main>
+
+<section class="scratch-page" id="scratchPage">
+ <video class="scratch-video" id="scratchVideo" playsinline muted preload="auto"
+   poster="11-poster.jpg" aria-label="Animated scratch card background">
+   <source src="11.mp4" type="video/mp4">
+ </video>
+ <div class="scratch-wrap">
+  <div class="reveal"><div class="scratch-date">24ᵗʰ - 25ᵗʰ November, 2026</div></div>
+  <div class="scratch-paper">SCRATCH HERE</div>
+  <canvas id="scratch"></canvas>
+ </div>
+ <div class="petals"></div>
+</section>
+
+<section class="map-page">
+ <h1>Find Us Here</h1>
+ <p>ITC RAJPUTANA • JAIPUR</p>
+ <div class="map"><iframe title="ITC Rajputana Jaipur"
+  src="https://www.google.com/maps?q=ITC+Rajputana,+Jaipur&output=embed" loading="lazy"></iframe></div>
+ <a class="dir" target="_blank" rel="noopener"
+  href="https://www.google.com/maps/dir/?api=1&destination=ITC+Rajputana,+Jaipur">Get Directions</a>
+</section>
+
+<script>
+const intro=document.getElementById('intro'),curtain=document.getElementById('curtain'),tap=document.getElementById('tap');
+const music=document.getElementById('music'),audio=document.getElementById('musicAudio');
+
+tap.onclick=async()=>{
+ tap.style.display='none';
+ try{
+   curtain.currentTime=0;
+   await curtain.play();
+   // The Tap to Open click is a user gesture, so start the supplied music here.
+   audio.volume=.34;
+   audio.load();
+   audio.play().then(()=>{
+     music.classList.add('on');
+     music.textContent='♫';
+   }).catch(()=>{
+     // If the browser blocks playback for any reason, the visible music button remains available.
+     music.classList.add('on');
+   });
+ }catch(e){tap.style.display='block'}
+};
+curtain.onended=()=>{intro.classList.add('out');setTimeout(()=>intro.remove(),780)};
+
+music.onclick=()=>{
+ if(audio.paused){audio.play();music.classList.add('on');music.textContent='♫'}
+ else{audio.pause();music.textContent='♪'}
+};
+
+const order=['1','2','SCRATCH','3','4','5','6','WP','7'];
+const host=document.getElementById('slides');
+const scratchVideo=document.getElementById('scratchVideo');
+if(scratchVideo){
+ scratchVideo.playbackRate=.65;
+ scratchVideo.addEventListener('loadeddata',()=>{scratchVideo.playbackRate=.65;},{once:true});
+}
+
+function makePetals(layer){
+ for(let i=0;i<12;i++){
+  const p=document.createElement('i');p.className='petal';
+  p.style.left=(Math.random()*100)+'%';
+  p.style.setProperty('--drift',(Math.random()*100-50)+'px');
+  p.style.animationDuration=(8+Math.random()*7)+'s';
+  p.style.animationDelay=(-Math.random()*12)+'s';
+  p.style.opacity=.22+Math.random()*.4;
+  layer.appendChild(p);
+ }
+}
+
+order.forEach(item=>{
+ if(item==='SCRATCH') return;
+ const s=document.createElement('section');s.className='slide';s.dataset.slide=item;
+ const poster=document.createElement('img');poster.className='poster';poster.src=item+'-poster.jpg';poster.alt='';
+ const v=document.createElement('video');v.src=item+'.mp4';v.playsInline=true;v.muted=true;v.preload='auto';v.setAttribute('webkit-playsinline','');
+ v.playbackRate=.65;
+ s.appendChild(poster);s.appendChild(v);
+ if(item==='1'){
+  const scroll=document.createElement('div');
+  scroll.className='scroll-down';
+  scroll.textContent='SCROLL DOWN';
+  s.appendChild(scroll);
+ }
+ const petals=document.createElement('div');petals.className='petals';makePetals(petals);s.appendChild(petals);
+ host.appendChild(s);
+ // Put scratch page immediately before Welcome Lunch & Haldi (video 3).
+ if(item==='2') host.appendChild(document.getElementById('scratchPage'));
+});
+
+// Keep a poster visible until the video has actually rendered its first frame.
+// This eliminates blank/black gaps while scrolling.
+document.querySelectorAll('.slide').forEach(slide=>{
+ const v=slide.querySelector('video');
+ v.addEventListener('loadeddata',()=>slide.classList.add('ready'),{once:true});
+ v.addEventListener('canplay',()=>slide.classList.add('ready'),{once:true});
+});
+
+const io=new IntersectionObserver(entries=>{
+ entries.forEach(e=>{
+  const v=e.target.querySelector('video');
+  if(!e.isIntersecting)return;
+  v.playbackRate=.65;
+  v.play().catch(()=>{});
+ });
+},{threshold:.45,rootMargin:'80px 0px 80px 0px'});
+document.querySelectorAll('.slide').forEach(s=>io.observe(s));
+if(scratchVideo){
+ const scratchIO=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+   if(e.isIntersecting){
+    scratchVideo.playbackRate=.65;
+    scratchVideo.play().catch(()=>{});
+   }
+  });
+ },{threshold:.35,rootMargin:'80px 0px 80px 0px'});
+ scratchIO.observe(document.getElementById('scratchPage'));
+}
+
+/* Scratch interaction */
+const canvas=document.getElementById('scratch'),wrap=document.querySelector('.scratch-page .scratch-wrap'),paper=document.querySelector('.scratch-page .scratch-paper');
+const ctx=canvas.getContext('2d',{willReadFrequently:true});let down=false,lx=0,ly=0,done=false;
+
+function setup(){
+ const r=wrap.getBoundingClientRect(),d=devicePixelRatio||1;
+ canvas.width=Math.round(r.width*d);canvas.height=Math.round(r.height*d);
+ canvas.style.width=r.width+'px';canvas.style.height=r.height+'px';ctx.setTransform(d,0,0,d,0,0);
+ const g=ctx.createLinearGradient(0,0,r.width,r.height);
+ g.addColorStop(0,'#c9a05a');g.addColorStop(.22,'#e5ca86');g.addColorStop(.5,'#b98c3f');g.addColorStop(.76,'#e0bf77');g.addColorStop(1,'#a97930');
+ ctx.globalCompositeOperation='source-over';ctx.fillStyle=g;ctx.fillRect(0,0,r.width,r.height);
+ for(let i=0;i<Math.max(300,Math.floor(r.width*r.height/90));i++){
+  const x=Math.random()*r.width,y=Math.random()*r.height;
+  ctx.fillStyle=`rgba(255,248,220,${.03+Math.random()*.07})`;ctx.fillRect(x,y,1+Math.random()*1.5,1);
+ }
+ ctx.fillStyle='rgba(91,66,30,.82)';ctx.textAlign='center';ctx.textBaseline='middle';
+ ctx.font=`600 ${Math.max(10,r.width*.037)}px Georgia`;ctx.fillText('SCRATCH HERE',r.width/2,r.height/2);
+}
+setup();window.addEventListener('resize',setup);
+
+function point(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+function erase(x,y,start){
+ if(paper)paper.style.opacity='0';
+ ctx.globalCompositeOperation='destination-out';ctx.lineCap='round';ctx.lineJoin='round';
+ ctx.lineWidth=Math.max(30,wrap.getBoundingClientRect().width*.11);
+ ctx.beginPath();
+ if(start){ctx.arc(x,y,ctx.lineWidth/2,0,Math.PI*2);ctx.fill()}
+ else{ctx.moveTo(lx,ly);ctx.lineTo(x,y);ctx.stroke()}
+ lx=x;ly=y;
+}
+function check(){
+ if(done)return;
+ const d=ctx.getImageData(0,0,canvas.width,canvas.height).data;let c=0,t=d.length/4;
+ for(let i=3;i<d.length;i+=4)if(d[i]<30)c++;
+ if(c/t>.55){done=true;canvas.style.transition='opacity .6s';canvas.style.opacity='0';setTimeout(()=>canvas.style.pointerEvents='none',650)}
+}
+canvas.onpointerdown=e=>{down=true;canvas.setPointerCapture(e.pointerId);const p=point(e);erase(p.x,p.y,true)};
+canvas.onpointermove=e=>{if(down){const p=point(e);erase(p.x,p.y,false)}};
+canvas.onpointerup=canvas.onpointercancel=()=>{down=false;check()};
+</script>
+</body>
+</html>
